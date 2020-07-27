@@ -101,5 +101,12 @@ plt.clf()
 ```
 
 ## What we have to understand next
-* How the rooms switch between different heating/cooling during on/off phase ?
-* How to log the 
+* How the rooms switch between different heating/cooling during on/off phase? Otherwise we see behaviors we don't understand.
+* How fast is the system able to achieve the set point and its effects are seen in the building?
+* Why are there only 1000 points in the plot?
+* Is the operation mode also present in the G36 as in ASHRAE20016?
+
+## How to decide configuration for the simulation
+* What is the period of simulation between steps?
+* Do we need modelica gym at all?
+* will simulation be a bottle neck?
