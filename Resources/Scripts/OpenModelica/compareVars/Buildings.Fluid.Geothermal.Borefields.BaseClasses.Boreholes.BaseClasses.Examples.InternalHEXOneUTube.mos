@@ -1,5 +1,0 @@
-compareVars :=
-  {
-    "realExpression.y",
-    "Rb_ref.y"
-  };

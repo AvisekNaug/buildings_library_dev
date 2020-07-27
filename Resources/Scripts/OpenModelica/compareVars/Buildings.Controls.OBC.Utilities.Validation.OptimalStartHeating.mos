@@ -1,7 +1,0 @@
-compareVars :=
-  {
-    "optStaHea.tOpt",
-    "TSetHea.y",
-    "optStaHea.TZon",
-    "optStaHea.optOn"
-  };

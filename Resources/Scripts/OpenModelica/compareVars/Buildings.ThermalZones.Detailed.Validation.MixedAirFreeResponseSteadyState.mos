@@ -1,5 +1,0 @@
-compareVars :=
-  {
-    "roo.heaPorAir.T",
-    "roo.heaPorRad.T"
-  };

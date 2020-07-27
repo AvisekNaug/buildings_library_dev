@@ -1,9 +1,0 @@
-OnlyConstructionBoundary
-OnlyExteriorWallNoWindow
-OnlyExteriorWallWithWindow
-OnlyExteriorWallWithWindowExteriorShade
-OnlyExteriorWallWithWindowInteriorShade
-OnlyPartition
-OnlySurfaceBoundary
-SampledModel
-BaseClasses

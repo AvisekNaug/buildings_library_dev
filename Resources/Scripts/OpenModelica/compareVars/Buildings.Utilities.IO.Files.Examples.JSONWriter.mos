@@ -1,6 +1,0 @@
-compareVars :=
-  {
-    "ramp.startTime",
-    "const.y",
-    "cosine.y"
-  };

@@ -1,6 +1,0 @@
-compareVars :=
-  {
-    "meaDat.y[4]",
-    "TBorHol.y",
-    "add.y"
-  };

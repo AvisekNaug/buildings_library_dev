@@ -1,5 +1,0 @@
-compareVars :=
-  {
-    "QAggShi_flow[3]",
-    "QAggShi_flow[4]"
-  };

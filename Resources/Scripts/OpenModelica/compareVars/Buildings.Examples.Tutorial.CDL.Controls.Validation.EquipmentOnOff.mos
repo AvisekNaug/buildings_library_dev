@@ -1,7 +1,0 @@
-compareVars :=
-  {
-    "conEquSta.TBoi",
-    "conEquSta.onSys",
-    "conEquSta.onPum",
-    "conEquSta.onBoi"
-  };

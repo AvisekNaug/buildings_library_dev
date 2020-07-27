@@ -1,4 +1,0 @@
-compareVars :=
-  {
-    "hvac.PFan"
-  };

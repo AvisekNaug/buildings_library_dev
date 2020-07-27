@@ -1,5 +1,0 @@
-compareVars :=
-  {
-    "TBorOut.T",
-    "TBorIn.T"
-  };

@@ -1,5 +1,0 @@
-compareVars :=
-  {
-    "movMea.u",
-    "movMea.y"
-  };

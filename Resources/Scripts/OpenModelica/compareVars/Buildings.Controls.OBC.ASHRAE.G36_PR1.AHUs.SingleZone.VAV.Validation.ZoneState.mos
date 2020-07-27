@@ -1,6 +1,0 @@
-compareVars :=
-  {
-    "zonSta.yZonSta",
-    "zonSta.uHea",
-    "zonSta.uCoo"
-  };

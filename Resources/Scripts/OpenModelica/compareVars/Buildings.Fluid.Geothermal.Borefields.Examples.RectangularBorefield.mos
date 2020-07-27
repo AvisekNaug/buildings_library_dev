@@ -1,5 +1,0 @@
-compareVars :=
-  {
-    "hea.sta_a.T",
-    "borFie.groTemRes.delTBor"
-  };

@@ -1,6 +1,0 @@
-compareVars :=
-  {
-    "thermalZoneTwoElements.TAir",
-    "senMasFra.X",
-    "senRelHum.phi"
-  };

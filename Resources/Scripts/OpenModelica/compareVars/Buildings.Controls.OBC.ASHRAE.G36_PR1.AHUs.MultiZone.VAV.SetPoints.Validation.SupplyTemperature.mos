@@ -1,9 +1,0 @@
-compareVars :=
-  {
-    "conTSupSet.uZonTemResReq",
-    "conTSupSet.uSupFan",
-    "conTSupSet.uOpeMod",
-    "conTSupSet.maxSupTemRes.y",
-    "conTSupSet.TOut",
-    "conTSupSet.TSupSet"
-  };

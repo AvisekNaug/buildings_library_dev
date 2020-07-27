@@ -1,5 +1,0 @@
-compareVars :=
-  {
-    "equFit.QLoa_flow",
-    "equFit.QSou_flow"
-  };

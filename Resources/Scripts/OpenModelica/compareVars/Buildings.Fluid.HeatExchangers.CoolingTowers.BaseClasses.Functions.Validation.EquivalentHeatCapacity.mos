@@ -1,8 +1,0 @@
-compareVars :=
-  {
-    "cpe10",
-    "cpe15",
-    "cpe20",
-    "cpe25",
-    "cpe30"
-  };
