@@ -6,6 +6,7 @@ Get the docker from [JModelica_docker](https://github.com/AvisekNaug/JModelica_d
 * Compile into an fmu
 
 ```bash
+export MODELICAPATH=<path to this library on docker>$MODELICAPATH
 mkdir testbed
 cd testbed
 ipython
