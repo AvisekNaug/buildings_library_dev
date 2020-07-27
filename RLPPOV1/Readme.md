@@ -11,7 +11,7 @@ cd testbed
 ipython
 ```
 
-```ipython
+```python
 from pymodelica import compile_fmu
 import pymodelica
 model_name = 'Buildings.Examples.VAVReheat.RLPPOV1'
@@ -27,7 +27,7 @@ conda activate modelicagym
 ipython
 ```
 
-```ipython
+```python
 
 # Step 1 of the simulation
 
