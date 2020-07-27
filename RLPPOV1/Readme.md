@@ -36,7 +36,7 @@ fmu_path = 'Buildings_Examples_VAVReheat_RLPPOV1.fmu'
 fmu_model = load_fmu(fmu_path)
 model_input_names = ['TSupSetHea']
 model_output_names = ['rl_oat','rl_ret','rl_TSupEas','rl_sat']
-model_input_value = [298]
+model_input_value = [298]  # Heating Set Point
 fmu_model.set(list(model_input_names),list(model_input_value))
 result = fmu_model.simulate(start_time=0.0,final_time=14400.0)
 res_log = tuple([result.final(k) for k in model_output_names])
@@ -55,7 +55,7 @@ plt.clf()
 
 # Step 2 of the simulation
 
-model_input_value = [283]
+model_input_value = [283]  # changing the heating set point for new gym step method of the Heating Set Point
 fmu_model.set(list(model_input_names),list(model_input_value))
 opts = fmu_model.simulate_options()
 opts['ncp'] = 50
