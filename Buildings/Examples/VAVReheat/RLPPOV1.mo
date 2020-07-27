@@ -17,12 +17,6 @@ model RLPPOV1
   Modelica.Blocks.Interfaces.RealOutput rl_ret "Return Air Temperature from Zones - TRet.T";
   Modelica.Blocks.Interfaces.RealOutput rl_mix "Mixed Air Temperature - TMix.T";
 
-  Modelica.Blocks.Interfaces.RealOutput rl_EFan "Fan Electrical Energy Use - res.EFan";
-  Modelica.Blocks.Interfaces.RealOutput rl_EHea "Heating Electrical Energy Use - res.EHea";
-  Modelica.Blocks.Interfaces.RealOutput rl_ECooSen "Sensible cooling energy - res.ECooSen";
-  Modelica.Blocks.Interfaces.RealOutput rl_ECooLat "Latent cooling energy - res.ECooLat";
-  Modelica.Blocks.Interfaces.RealOutput rl_ECoo "Total cooling energy - res.ECoo";
-
   Modelica.Blocks.Interfaces.RealOutput rl_TSupCor "Temperature of the passing fluid - TSupCor.T";
   Modelica.Blocks.Interfaces.RealOutput rl_TSupEas "Temperature of the passing fluid - TSupEas.T";
   Modelica.Blocks.Interfaces.RealOutput rl_TSupWes "Temperature of the passing fluid - TSupWes.T";
@@ -343,17 +337,10 @@ equation
   connect(TRet.T, rl_ret);
   connect(TMix.T, rl_mix);
 
-  connect(res.EFan, rl_EFan);
-  connect(res.EHea, rl_EHea);
-  connect(res.ECooSen, rl_ECooSen);
-  connect(res.ECooLat, rl_ECooLat);
-  connect(res.ECoo, rl_ECoo);
-
   connect(TSupCor.T, rl_TSupCor);
   connect(TSupEas.T, rl_TSupEas);
   connect(TSupWes.T, rl_TSupWes);
   connect(TSupSou.T, rl_TSupSou);
-  
 
   annotation (
     Diagram(coordinateSystem(preserveAspectRatio=false,extent={{-380,-400},{1440,
