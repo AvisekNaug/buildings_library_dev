@@ -41,9 +41,9 @@ model_input_names = ['TSupSetHea']
 model_output_names = ['rl_oat','rl_ret','rl_TSupEas','rl_sat']
 model_input_value = [285]  # Heating Set Point
 fmu_model.set(list(model_input_names),list(model_input_value))
-result = fmu_model.simulate(start_time=0.0,final_time=28800.0)
+result = fmu_model.simulate(start_time=0.0,final_time=57600.0)
 res_log = tuple([result.final(k) for k in model_output_names])
-res_log1 = {'rl_sat':result['rl_sat'],'rl_oat':result['rl_oat'],'rl_ret':result['rl_ret'],'rl_TSupEas':result['rl_TSupEas']}
+res_log1 = {'rl_sat':result['rl_sat'],'rl_oat':result['rl_oat'],'rl_ret':result['rl_ret'],'rl_TSupEas':result['rl_TSupEas'],'rl_EHea':result['res.EHea']}
 
 plt.plot(res_log1['rl_oat'])
 plt.plot(res_log1['rl_ret'])
@@ -62,7 +62,7 @@ opts = fmu_model.simulate_options()
 opts['initialize'] = False
 result = fmu_model.simulate(start_time=57600.0,final_time=115200.0,options=opts)
 res_log = tuple([result.final(k) for k in model_output_names])
-res_log2 = {'rl_sat':result['rl_sat'],'rl_oat':result['rl_oat'],'rl_ret':result['rl_ret'],'rl_TSupEas':result['rl_TSupEas']}
+res_log2 = {'rl_sat':result['rl_sat'],'rl_oat':result['rl_oat'],'rl_ret':result['rl_ret'],'rl_TSupEas':result['rl_TSupEas'],'rl_EHea':result['res.EHea']}
 
 plt.plot(res_log2['rl_oat'])
 plt.plot(res_log2['rl_ret'])
@@ -82,22 +82,24 @@ visualize the pdfs locally or on remote machine whichever you are working with. 
 
 Alternative plotting
 ```python
+import matplotlib.pylab as plt
 plt.figure(figsize=(15,10))
 import numpy as np
 arr1 = np.concatenate((res_log1['rl_sat'],res_log2['rl_sat']))
 arr2 = np.concatenate((res_log1['rl_ret'],res_log2['rl_ret']))
 arr3 = np.concatenate((res_log1['rl_TSupEas'],res_log2['rl_TSupEas']))
 arr4 = np.concatenate((res_log1['rl_oat'],res_log2['rl_oat']))
-import matplotlib.pylab as plt
+arr5 = np.concatenate((res_log1['rl_EHea'],res_log2['rl_EHea']))
 plt.plot(arr1,'r*-')
 plt.plot(arr2,'k4-')
 plt.plot(arr3,'b.-')
 plt.plot(arr4,'go-')
-plt.legend(('rl_sat', 'rl_ret', 'rl_TSupEas'))
-plt.savefig('testbed6.pdf',bbox_inches='tight')
+plt.plot(arr5,'co-')
+plt.legend(('rl_sat', 'rl_ret', 'rl_TSupEas', 'oat','Heating Energy(J/m2)'))
+plt.savefig('testbed7.pdf',bbox_inches='tight')
 plt.clf()
 ```
 
 ## What we have to understand next
-* How the rooms switch between different heating/cooling during on/off phase
-* 
+* How the rooms switch between different heating/cooling during on/off phase ?
+* How to log the 
