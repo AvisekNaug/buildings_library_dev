@@ -31,18 +31,18 @@ ipython
 ```python
 
 # Step 1 of the simulation
-
+import matplotlib.pylab as plt
 from pyfmi import load_fmu
+
+
 fmu_path = 'Buildings_Examples_VAVReheat_RLPPOV1.fmu'
 fmu_model = load_fmu(fmu_path)
 model_input_names = ['TSupSetHea']
 model_output_names = ['rl_oat','rl_ret','rl_TSupEas','rl_sat']
-model_input_value = [298]  # Heating Set Point
+model_input_value = [285]  # Heating Set Point
 fmu_model.set(list(model_input_names),list(model_input_value))
-result = fmu_model.simulate(start_time=0.0,final_time=14400.0)
+result = fmu_model.simulate(start_time=0.0,final_time=28800.0)
 res_log = tuple([result.final(k) for k in model_output_names])
-
-import matplotlib.pylab as plt
 res_log1 = {'rl_sat':result['rl_sat'],'rl_oat':result['rl_oat'],'rl_ret':result['rl_ret'],'rl_TSupEas':result['rl_TSupEas']}
 
 plt.plot(res_log1['rl_oat'])
@@ -56,15 +56,12 @@ plt.clf()
 
 # Step 2 of the simulation
 
-model_input_value = [283]  # changing the heating set point for new gym step method of the Heating Set Point
+model_input_value = [279]  # changing the heating set point for new gym step method of the Heating Set Point
 fmu_model.set(list(model_input_names),list(model_input_value))
 opts = fmu_model.simulate_options()
-opts['ncp'] = 50
 opts['initialize'] = False
-result = fmu_model.simulate(start_time=14400.0,final_time=28800.0,options=opts)
+result = fmu_model.simulate(start_time=57600.0,final_time=115200.0,options=opts)
 res_log = tuple([result.final(k) for k in model_output_names])
-
-import matplotlib.pylab as plt
 res_log2 = {'rl_sat':result['rl_sat'],'rl_oat':result['rl_oat'],'rl_ret':result['rl_ret'],'rl_TSupEas':result['rl_TSupEas']}
 
 plt.plot(res_log2['rl_oat'])
@@ -82,3 +79,25 @@ mv testbed1.pdf <path to buildings library on docker>
 mv testbed2.pdf <path to buildings library on docker>
 ```
 visualize the pdfs locally or on remote machine whichever you are working with. They will be located inside the buildings library folder.
+
+Alternative plotting
+```python
+plt.figure(figsize=(15,10))
+import numpy as np
+arr1 = np.concatenate((res_log1['rl_sat'],res_log2['rl_sat']))
+arr2 = np.concatenate((res_log1['rl_ret'],res_log2['rl_ret']))
+arr3 = np.concatenate((res_log1['rl_TSupEas'],res_log2['rl_TSupEas']))
+arr4 = np.concatenate((res_log1['rl_oat'],res_log2['rl_oat']))
+import matplotlib.pylab as plt
+plt.plot(arr1,'r*-')
+plt.plot(arr2,'k4-')
+plt.plot(arr3,'b.-')
+plt.plot(arr4,'go-')
+plt.legend(('rl_sat', 'rl_ret', 'rl_TSupEas'))
+plt.savefig('testbed6.pdf',bbox_inches='tight')
+plt.clf()
+```
+
+## What we have to understand next
+* How the rooms switch between different heating/cooling during on/off phase
+* 
