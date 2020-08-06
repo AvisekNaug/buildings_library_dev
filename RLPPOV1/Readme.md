@@ -100,6 +100,41 @@ plt.savefig('testbed7.pdf',bbox_inches='tight')
 plt.clf()
 ```
 
+Plot with time
+```python
+import matplotlib.pylab as plt
+from pyfmi import load_fmu
+from datetime import datetime, timedelta
+from matplotlib.dates import DateFormatter, date2num
+
+formatter = DateFormatter('%B-%d %I:%M:%S %p')
+start_time = datetime(2019,1,1)
+time_idx = [start_time + timedelta(seconds=i)  for i in res_log['time']]
+time_idx = date2num(time_idx)
+
+
+fig, ax = plt.subplots()
+plt.plot_date(time_idx, res_log1['rl_oat'])
+plt.plot_date(time_idx, res_log1['rl_ret'])
+plt.plot_date(time_idx, res_log1['rl_TSupEas'])
+plt.plot_date(time_idx, res_log1['rl_sat'])
+plt.legend(('Ambient T','Return air T','East Zone T','AHU Supply Air T'))
+
+ax.set_xlabel('Time')
+ax.set_ylabel('Example Measured Temperature Variables in Kelvin')
+ax.xaxis.set_major_formatter(formatter)
+ax.xaxis.set_tick_params(rotation=30, labelsize=10)
+
+plt.savefig('demo_plot.png',bbox_inches='tight')
+plt.savefig('demo_plot1.pdf',bbox_inches='tight')
+```
+
+Then,
+```bash
+ mv demo_plot.png /home/developer/buildings_library_dev/RLPPOV1
+ mv demo_plot1.pdf /home/developer/buildings_library_dev/RLPPOV1
+```
+
 ## What we have to understand next
 * How the rooms switch between different heating/cooling during on/off phase? Otherwise we see behaviors we don't understand.
 * How fast is the system able to achieve the set point and its effects are seen in the building?
