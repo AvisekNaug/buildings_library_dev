@@ -15,11 +15,13 @@ ipython
 ```python
 from pymodelica import compile_fmu
 import pymodelica
+# Increase memory in case compilation fails
+pymodelica.environ['JVM_ARGS'] = '-Xmx4096m'
+
 model_name = 'Buildings.Examples.VAVReheat.RLPPOV1'
 fmu_path = compile_fmu(model_name, target='cs')
 
-# Increase memory in case compilation fails
-pymodelica.environ['JVM_ARGS'] = '-Xmx4096m'
+
 quit()
 ```
 
