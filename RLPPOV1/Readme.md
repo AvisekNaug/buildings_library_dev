@@ -1,4 +1,4 @@
-## Example python instructions to run RLPPOV1
+## Example python instructions to run RLPPOV1 folder
 
 Get the docker from [JModelica_docker](https://github.com/AvisekNaug/JModelica_docker)
 
