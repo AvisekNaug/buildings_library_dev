@@ -34,11 +34,13 @@ ipython
 import matplotlib.pylab as plt
 from pyfmi import load_fmu
 
-# Step 1 of the simulation
+
 fmu_path = 'Buildings_Examples_VAVReheat_RLPPOV1.fmu'
 fmu_model = load_fmu(fmu_path)
 model_input_names = ['TSupSetHea']
 model_output_names = ['rl_oat','rl_ret','rl_TSupEas','rl_sat']
+
+# Step 1 of the simulation
 model_input_value = [285]  # Heating Set Point
 fmu_model.set(list(model_input_names),list(model_input_value))
 result = fmu_model.simulate(start_time=0.0,final_time=57600.0)
