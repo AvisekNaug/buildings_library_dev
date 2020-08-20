@@ -67,7 +67,7 @@ from matplotlib.dates import DateFormatter, date2num
 
 formatter = DateFormatter('%B-%d %I:%M:%S %p')
 start_time = datetime(2019,1,1)
-time_idx = [start_time + timedelta(seconds=i)  for i in res_log['time']]
+time_idx = [start_time + timedelta(seconds=i)  for i in res_log1['time']]
 time_idx = date2num(time_idx)
 
 
