@@ -36,24 +36,24 @@ from pyfmi import load_fmu
 
 
 fmu_path = 'Buildings_Examples_VAVReheat_RLPPOV1.fmu'
-fmu_model = load_fmu(fmu_path)
+fmu = load_fmu(fmu_path)
 model_input_names = ['TSupSetHea']
 model_output_names = ['rl_oat','rl_ret','rl_TSupEas','rl_sat']
 
 # Step 1 of the simulation
 model_input_value = [285]  # Heating Set Point
-fmu_model.set(list(model_input_names),list(model_input_value))
-result = fmu_model.simulate(start_time=0.0,final_time=57600.0)
+fmu.set(list(model_input_names),list(model_input_value))
+result = fmu.simulate(start_time=0.0,final_time=57600.0)
 res_log = tuple([result.final(k) for k in model_output_names]) # only final value
 res_log1 = {'rl_sat':result['rl_sat'],'rl_oat':result['rl_oat'],'rl_ret':result['rl_ret'],'rl_TSupEas':result['rl_TSupEas'],'rl_EHea':result['res.EHea'],'time':result['time']}
 
 # Step 2 of the simulation
 
 model_input_value = [279]  # changing the heating set point for new gym step method of the Heating Set Point
-fmu_model.set(list(model_input_names),list(model_input_value))
-opts = fmu_model.simulate_options()
+fmu.set(list(model_input_names),list(model_input_value))
+opts = fmu.simulate_options()
 opts['initialize'] = False
-result = fmu_model.simulate(start_time=57600.0,final_time=115200.0,options=opts)
+result = fmu.simulate(start_time=57600.0,final_time=115200.0,options=opts)
 res_log = tuple([result.final(k) for k in model_output_names]) # only final value
 res_log2 = {'rl_sat':result['rl_sat'],'rl_oat':result['rl_oat'],'rl_ret':result['rl_ret'],'rl_TSupEas':result['rl_TSupEas'],'rl_EHea':result['res.EHea'],'time':result['time']}
 ```
