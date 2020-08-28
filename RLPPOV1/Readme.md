@@ -103,3 +103,24 @@ Then,
 * What is the period of simulation between steps?
 * Do we need modelica gym at all?
 * will simulation be a bottle neck?
+
+### Using  step method
+```python
+ import numpy as np
+start_time = 36000
+final_time = 36300
+model_input_names = ['TSupSetHea']
+model_output_names = ['rl_oat','rl_ret','rl_TSupEas','rl_sat']
+fmu.reset()
+fmu.initialize(start_time, final_time)
+t_step = start_time
+step_size = 30.0
+res = {}
+store = {}
+while t_step < final_time:
+    fmu.set(model_input_names,[np.random.uniform(276,285,1)[0]])
+    res[t_step] = fmu.do_step(current_t=t_step, step_size=step_size, new_step=True)
+    store[t_step] = fmu.get(model_output_names)
+    t_step += step_size
+
+```
