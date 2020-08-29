@@ -176,3 +176,5 @@ plt.clf()
 plt.savefig('demo_plot.png',bbox_inches='tight')
 plt.savefig('demo_plot1.pdf',bbox_inches='tight')
 ```
+
+![](https://github.com/AvisekNaug/buildings_library_dev/blob/master/RLPPOV1/SampleRun.png)
