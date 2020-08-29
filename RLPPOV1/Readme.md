@@ -104,23 +104,75 @@ Then,
 * Do we need modelica gym at all?
 * will simulation be a bottle neck?
 
-### Using  step method
+### Using step method to do the simulation
 ```python
- import numpy as np
-start_time = 36000
-final_time = 36300
+from pyfmi import load_fmu
+import numpy as np
+
+fmu_path = 'Buildings_Examples_VAVReheat_RLPPOV1.fmu'
+fmu = load_fmu(fmu_path)
+
+start_time = 3600
+final_time = 3600*200
+
 model_input_names = ['TSupSetHea']
-model_output_names = ['rl_oat','rl_ret','rl_TSupEas','rl_sat']
+model_output_names = ['rl_oat','rl_ret','rl_TSupEas','rl_sat','res.EHea']
+
+
 fmu.reset()
 fmu.initialize(start_time, final_time)
-t_step = start_time
-step_size = 30.0
+step_size = 3600.0
+
 res = {}
 store = {}
+for i in model_output_names+model_input_names:
+    store[i] = []
+store['time'] = []
+
+t_step = start_time
 while t_step < final_time:
     fmu.set(model_input_names,[np.random.uniform(276,285,1)[0]])
     res[t_step] = fmu.do_step(current_t=t_step, step_size=step_size, new_step=True)
-    store[t_step] = fmu.get(model_output_names)
+    for i in model_output_names+model_input_names:
+        store[i].append(fmu.get(i)[0])
+    store['time'].append(fmu.time)
     t_step += step_size
 
+# plot with time
+
+import matplotlib.pyplot as plt
+from datetime import datetime, timedelta
+from matplotlib.dates import DateFormatter, date2num
+
+alias_dict = {'rl_oat':'Ambient T','rl_ret':'Return air T', 'TSupSetHea':'Heating Coil Set Point',\
+'rl_TSupEas':'East Zone T','rl_sat':'AHU Supply Air T', 'res.EHea' : 'Heating Energy'}
+
+formatter = DateFormatter('%B-%d %I:%M:%S %p')
+start_time = datetime(2019,1,1)
+time_idx = [start_time + timedelta(seconds=i)  for i in store['time']]
+time_idx = date2num(time_idx)
+
+
+fig, ax = plt.subplots()
+for y_val in model_output_names[:-1]+model_input_names:
+    ax.plot_date(time_idx, store[y_val],linestyle='dashed', marker='o',label=alias_dict[y_val])
+
+ax.set_xlabel('Time')
+ax.set_ylabel('Kelvin')
+ax.xaxis.set_major_formatter(formatter)
+ax.xaxis.set_tick_params(rotation=30, labelsize=10)
+ax.legend(loc="upper left")
+
+ax2 = ax.twinx()
+ax2.plot_date(time_idx, store['res.EHea'],color='k',linestyle='dashed', marker='.',label=alias_dict['res.EHea'])
+ax2.set_ylabel('Energy')
+ax2.legend(loc="upper right")
+
+plt.show()
+
+plt.clf()
+
+
+plt.savefig('demo_plot.png',bbox_inches='tight')
+plt.savefig('demo_plot1.pdf',bbox_inches='tight')
 ```
