@@ -112,11 +112,11 @@ import numpy as np
 fmu_path = 'Buildings_Examples_VAVReheat_RLPPOV1.fmu'
 fmu = load_fmu(fmu_path)
 
-start_time = 3600
-final_time = 3600*200
+start_time = 3600*1
+final_time = 3600*500
 
 model_input_names = ['TSupSetHea']
-model_output_names = ['rl_oat','rl_ret','rl_TSupEas','rl_sat','res.EHea']
+model_output_names = ['rl_oat', 'rl_sat', 'rl_TSupEas', 'conVAVEas.TRooHeaSet', 'conVAVEas.TRooCooSet', 'res.PHea', 'res.PFan']
 
 
 fmu.reset()
@@ -144,8 +144,8 @@ import matplotlib.pyplot as plt
 from datetime import datetime, timedelta
 from matplotlib.dates import DateFormatter, date2num
 
-alias_dict = {'rl_oat':'Ambient T','rl_ret':'Return air T', 'TSupSetHea':'Heating Coil Set Point',\
-'rl_TSupEas':'East Zone T','rl_sat':'AHU Supply Air T', 'res.EHea' : 'Heating Energy'}
+alias_dict = {'rl_oat':'Ambient T','rl_ret':'Return air T', 'TSupSetHea':'AHU Heating Coil Set Point',\
+'rl_TSupEas':'East Zone T','rl_sat':'AHU Supply Air T', 'res.PHea' : 'Heating Power', 'conVAVEas.TRooHeaSet':'Setpoint temperature for room for heating', 'conVAVEas.TRooCooSet': 'Setpoint temperature for room for cooling', 'res.PFan':'Fan Power'}
 
 formatter = DateFormatter('%B-%d %I:%M:%S %p')
 start_time = datetime(2019,1,1)
@@ -154,7 +154,7 @@ time_idx = date2num(time_idx)
 
 
 fig, ax = plt.subplots()
-for y_val in model_output_names[:-1]+model_input_names:
+for y_val in model_output_names[:-2]+model_input_names:
     ax.plot_date(time_idx, store[y_val],linestyle='dashed', marker='o',label=alias_dict[y_val])
 
 ax.set_xlabel('Time')
@@ -162,9 +162,11 @@ ax.set_ylabel('Kelvin')
 ax.xaxis.set_major_formatter(formatter)
 ax.xaxis.set_tick_params(rotation=30, labelsize=10)
 ax.legend(loc="upper left")
+ax.grid(True)
 
 ax2 = ax.twinx()
-ax2.plot_date(time_idx, store['res.EHea'],color='k',linestyle='dashed', marker='.',label=alias_dict['res.EHea'])
+for y_val in model_output_names[-2:]:
+    ax2.plot_date(time_idx, store[y_val],linestyle='solid', marker='.',label=alias_dict[y_val])
 ax2.set_ylabel('Energy')
 ax2.legend(loc="upper right")
 
