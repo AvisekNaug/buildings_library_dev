@@ -116,7 +116,7 @@ start_time = 3600*1
 final_time = 3600*500
 
 model_input_names = ['TSupSetHea']
-model_output_names = ['rl_oat', 'rl_sat', 'rl_TSupEas', 'conVAVEas.TRooHeaSet', 'conVAVEas.TRooCooSet', 'res.PHea', 'res.PFan']
+model_output_names = ['rl_oat', 'rl_sat', 'rl_TSupEas', 'conVAVEas.TRooHeaSet', 'conVAVEas.TRooCooSet', 'res.PHea', 'res.PFan', 'res.PCooSen', 'res.PCooLat']
 
 
 fmu.reset()
@@ -145,7 +145,7 @@ from datetime import datetime, timedelta
 from matplotlib.dates import DateFormatter, date2num
 
 alias_dict = {'rl_oat':'Ambient T','rl_ret':'Return air T', 'TSupSetHea':'AHU Heating Coil Set Point',\
-'rl_TSupEas':'East Zone T','rl_sat':'AHU Supply Air T', 'res.PHea' : 'Heating Power', 'conVAVEas.TRooHeaSet':'Setpoint temperature for room for heating', 'conVAVEas.TRooCooSet': 'Setpoint temperature for room for cooling', 'res.PFan':'Fan Power'}
+'rl_TSupEas':'East Zone T','rl_sat':'AHU Supply Air T', 'res.PHea' : 'Heating Power', 'conVAVEas.TRooHeaSet':'Setpoint temperature for room for heating', 'conVAVEas.TRooCooSet': 'Setpoint temperature for room for cooling', 'res.PFan':'Fan Power', 'res.PCooSen':'Sesible Cooling Power', 'res.PCooLat':'Latent Cooling Power'}
 
 formatter = DateFormatter('%B-%d %I:%M:%S %p')
 start_time = datetime(2019,1,1)
@@ -154,7 +154,7 @@ time_idx = date2num(time_idx)
 
 
 fig, ax = plt.subplots()
-for y_val in model_output_names[:-2]+model_input_names:
+for y_val in model_output_names[:-4]+model_input_names:
     ax.plot_date(time_idx, store[y_val],linestyle='dashed', marker='o',label=alias_dict[y_val])
 
 ax.set_xlabel('Time')
@@ -165,9 +165,9 @@ ax.legend(loc="upper left")
 ax.grid(True)
 
 ax2 = ax.twinx()
-for y_val in model_output_names[-2:]:
+for y_val in model_output_names[-4:]:
     ax2.plot_date(time_idx, store[y_val],linestyle='solid', marker='.',label=alias_dict[y_val])
-ax2.set_ylabel('Energy')
+ax2.set_ylabel('watt')
 ax2.legend(loc="upper right")
 
 plt.show()
