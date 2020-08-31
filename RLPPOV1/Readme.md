@@ -166,7 +166,7 @@ ax.grid(True)
 
 ax2 = ax.twinx()
 for y_val in model_output_names[-4:]:
-    ax2.plot_date(time_idx, store[y_val],linestyle='solid', marker='.',label=alias_dict[y_val])
+    ax2.plot_date(time_idx, store[y_val],linestyle='solid', marker='4',label=alias_dict[y_val])
 ax2.set_ylabel('watt')
 ax2.legend(loc="upper right")
 
@@ -179,4 +179,4 @@ plt.savefig('demo_plot.png',bbox_inches='tight')
 plt.savefig('demo_plot1.pdf',bbox_inches='tight')
 ```
 
-![](https://github.com/AvisekNaug/buildings_library_dev/blob/master/RLPPOV1/SampleRun.png)
+![](https://github.com/AvisekNaug/buildings_library_dev/blob/master/RLPPOV1/plots/Plot2UnderStandVars.png)
