@@ -108,19 +108,20 @@ Then,
 ```python
 from pyfmi import load_fmu
 import numpy as np
+import time
 
 fmu_path = 'Buildings_Examples_VAVReheat_RLPPOV1.fmu'
 fmu = load_fmu(fmu_path)
 
-start_time = 3600*1
-final_time = 3600*500
+start_time = 3600*2500
+final_time = 3600*3200
 
 model_input_names = ['TSupSetHea']
 model_output_names = ['rl_oat', 'rl_sat', 'rl_TSupEas', 'conVAVEas.TRooHeaSet', 'conVAVEas.TRooCooSet', 'res.PHea', 'res.PFan', 'res.PCooSen', 'res.PCooLat']
 
 
 fmu.reset()
-fmu.initialize(start_time, final_time)
+fmu.initialize(start_time=start_time,stop_time=final_time)
 step_size = 3600.0
 
 res = {}
@@ -129,10 +130,15 @@ for i in model_output_names+model_input_names:
     store[i] = []
 store['time'] = []
 
+iter = 1
 t_step = start_time
 while t_step < final_time:
     fmu.set(model_input_names,[np.random.uniform(276,285,1)[0]])
+    time_start = time.time()
     res[t_step] = fmu.do_step(current_t=t_step, step_size=step_size, new_step=True)
+    time_end = time.time()
+    print("Took {:.2f} s to complete the simulation iteration {}".format(time_end-time_start, iter))
+    iter += 1
     for i in model_output_names+model_input_names:
         store[i].append(fmu.get(i)[0])
     store['time'].append(fmu.time)
@@ -144,39 +150,62 @@ import matplotlib.pyplot as plt
 from datetime import datetime, timedelta
 from matplotlib.dates import DateFormatter, date2num
 
+plt.rcParams["figure.figsize"]=15,7
+
 alias_dict = {'rl_oat':'Ambient T','rl_ret':'Return air T', 'TSupSetHea':'AHU Heating Coil Set Point',\
 'rl_TSupEas':'East Zone T','rl_sat':'AHU Supply Air T', 'res.PHea' : 'Heating Power', 'conVAVEas.TRooHeaSet':'Setpoint temperature for room for heating', 'conVAVEas.TRooCooSet': 'Setpoint temperature for room for cooling', 'res.PFan':'Fan Power', 'res.PCooSen':'Sesible Cooling Power', 'res.PCooLat':'Latent Cooling Power'}
+
+model_input_names = ['TSupSetHea']
+model_output_names = ['rl_oat', 'rl_sat', 'rl_TSupEas', 'conVAVEas.TRooHeaSet', 'conVAVEas.TRooCooSet', 'res.PHea', 'res.PFan', 'res.PCooSen', 'res.PCooLat']
 
 formatter = DateFormatter('%B-%d %I:%M:%S %p')
 start_time = datetime(2019,1,1)
 time_idx = [start_time + timedelta(seconds=i)  for i in store['time']]
 time_idx = date2num(time_idx)
 
+fig, (ax, ax2, ax3) = plt.subplots(3, sharex=True)
 
-fig, ax = plt.subplots()
+# plot 1
 for y_val in model_output_names[:-4]+model_input_names:
-    ax.plot_date(time_idx, store[y_val],linestyle='dashed', marker='o',label=alias_dict[y_val])
-
-ax.set_xlabel('Time')
+    ax.plot_date(time_idx, store[y_val],linestyle='solid', marker='.',label=alias_dict[y_val])
 ax.set_ylabel('Kelvin')
-ax.xaxis.set_major_formatter(formatter)
-ax.xaxis.set_tick_params(rotation=30, labelsize=10)
-ax.legend(loc="upper left")
 ax.grid(True)
+ax.minorticks_on()
+ax.legend(loc='upper left', bbox_to_anchor=(1.05, 1))
 
-ax2 = ax.twinx()
-for y_val in model_output_names[-4:]:
-    ax2.plot_date(time_idx, store[y_val],linestyle='solid', marker='4',label=alias_dict[y_val])
+# plot 2
+y_val=model_output_names[-4]
+ax2.plot_date(time_idx, store[y_val],linestyle='--', marker='.',label=alias_dict[y_val])
 ax2.set_ylabel('watt')
-ax2.legend(loc="upper right")
+ax2.grid(True)
+ax2.minorticks_on()
+ax2.legend(loc='upper left', bbox_to_anchor=(1.05, 1))
+
+# plot 2
+for y_val in model_output_names[-3:]:
+    ax3.plot_date(time_idx, store[y_val],linestyle='--', marker='.',label=alias_dict[y_val])
+ax3.set_xlabel('Time')
+ax3.set_ylabel('watt')
+ax3.grid(True)
+ax3.minorticks_on()
+ax3.xaxis.set_major_formatter(formatter)
+ax3.xaxis.set_tick_params(rotation=10, labelsize=6)
+ax3.legend(loc='upper left', bbox_to_anchor=(1.05, 1))
+
+plt.tight_layout(rect=[0,0,0.90,1])
 
 plt.show()
 
 plt.clf()
 
-
 plt.savefig('demo_plot.png',bbox_inches='tight')
 plt.savefig('demo_plot1.pdf',bbox_inches='tight')
 ```
 
-![](https://github.com/AvisekNaug/buildings_library_dev/blob/master/RLPPOV1/plots/Plot2UnderStandVars.png)
+
+```python
+import pickle
+with open('store.pickle', 'rb') as handle:
+    store = pickle.load(handle)
+
+```
