@@ -113,11 +113,14 @@ import time
 fmu_path = 'Buildings_Examples_VAVReheat_RLPPOV1.fmu'
 fmu = load_fmu(fmu_path)
 
-start_time = 3600*2500
-final_time = 3600*3200
+start_hour = 0
+final_hour = 500 # 8760
+start_time = 3600*start_hour
+final_time = 3600*final_hour
 
 model_input_names = ['TSupSetHea']
-model_output_names = ['rl_oat', 'rl_sat', 'rl_TSupEas', 'conVAVEas.TRooHeaSet', 'conVAVEas.TRooCooSet', 'res.PHea', 'res.PFan', 'res.PCooSen', 'res.PCooLat']
+model_output_names = ['occSch.occupied', 'rl_oat', 'rl_sat', 'rl_TSupEas', 'rl_sol', 'rl_oah', 'conVAVEas.TRooHeaSet',
+ 'conVAVEas.TRooCooSet', 'res.PHea', 'res.PFan', 'res.PCooSen', 'res.PCooLat']
 
 
 fmu.reset()
@@ -130,19 +133,24 @@ for i in model_output_names+model_input_names:
     store[i] = []
 store['time'] = []
 
-iter = 1
+iter = start_hour
 t_step = start_time
 while t_step < final_time:
-    fmu.set(model_input_names,[np.random.uniform(276,285,1)[0]])
+    fmu.set(model_input_names,[np.random.uniform(280,298,1)[0]])
     time_start = time.time()
     res[t_step] = fmu.do_step(current_t=t_step, step_size=step_size, new_step=True)
     time_end = time.time()
-    print("Took {:.2f} s to complete the simulation iteration {}".format(time_end-time_start, iter))
+    print("Took {:.2f} s to complete the simulation iteration {} of {}".format(time_end-time_start, iter, final_hour))
     iter += 1
     for i in model_output_names+model_input_names:
         store[i].append(fmu.get(i)[0])
     store['time'].append(fmu.time)
     t_step += step_size
+
+# save the dictionary
+import json
+with open('results_{}_2_{}.json'.format(start_hour,final_hour), 'w') as fp:
+    json.dump(store, fp)
 
 # plot with time
 
@@ -150,28 +158,29 @@ import matplotlib.pyplot as plt
 from datetime import datetime, timedelta
 from matplotlib.dates import DateFormatter, date2num
 
-plt.rcParams["figure.figsize"]=15,7
+plt.rcParams["figure.figsize"]=15,10
 
 alias_dict = {'rl_oat':'Ambient T','rl_ret':'Return air T', 'TSupSetHea':'AHU Heating Coil Set Point',\
-'rl_TSupEas':'East Zone T','rl_sat':'AHU Supply Air T', 'res.PHea' : 'Heating Power', 'conVAVEas.TRooHeaSet':'Setpoint temperature for room for heating', 'conVAVEas.TRooCooSet': 'Setpoint temperature for room for cooling', 'res.PFan':'Fan Power', 'res.PCooSen':'Sesible Cooling Power', 'res.PCooLat':'Latent Cooling Power'}
+'rl_TSupEas':'East Zone T','rl_sat':'AHU Supply Air T', 'res.PHea' : 'Heating Power', 'conVAVEas.TRooHeaSet':'Setpoint temperature for room for heating', 'conVAVEas.TRooCooSet': 'Setpoint temperature for room for cooling', 'res.PFan':'Fan Power', 'res.PCooSen':'Sesible Cooling Power', 'res.PCooLat':'Latent Cooling Power', 'rl_sol' : "Solar Irradiation Global Horz", 'rl_oah' : "Outside Air Humidity",'occSch.occupancy[1]':'Occupancy1', 'occSch.occupancy[2]':'Occupancy2',"occSch.occupied": "Outputs true if occupied at current time"}
 
 model_input_names = ['TSupSetHea']
-model_output_names = ['rl_oat', 'rl_sat', 'rl_TSupEas', 'conVAVEas.TRooHeaSet', 'conVAVEas.TRooCooSet', 'res.PHea', 'res.PFan', 'res.PCooSen', 'res.PCooLat']
+model_output_names = ['occSch.occupied', 'rl_oat', 'rl_sat', 'rl_TSupEas', 'rl_sol', 'rl_oah', 'conVAVEas.TRooHeaSet',
+ 'conVAVEas.TRooCooSet', 'res.PHea', 'res.PFan', 'res.PCooSen', 'res.PCooLat']
 
 formatter = DateFormatter('%B-%d %I:%M:%S %p')
 start_time = datetime(2019,1,1)
 time_idx = [start_time + timedelta(seconds=i)  for i in store['time']]
 time_idx = date2num(time_idx)
 
-fig, (ax, ax2, ax3) = plt.subplots(3, sharex=True)
+fig, (ax1, ax2, ax3, ax4) = plt.subplots(4, sharex=True)
 
 # plot 1
-for y_val in model_output_names[:-4]+model_input_names:
-    ax.plot_date(time_idx, store[y_val],linestyle='solid', marker='.',label=alias_dict[y_val])
-ax.set_ylabel('Kelvin')
-ax.grid(True)
-ax.minorticks_on()
-ax.legend(loc='upper left', bbox_to_anchor=(1.05, 1))
+for y_val in model_output_names[1:-4]+model_input_names:
+    ax1.plot_date(time_idx, store[y_val],linestyle='solid', marker='.',label=alias_dict[y_val])
+ax1.set_ylabel('Kelvin')
+ax1.grid(True)
+ax1.minorticks_on()
+ax1.legend(loc='upper left', bbox_to_anchor=(1.05, 1))
 
 # plot 2
 y_val=model_output_names[-4]
@@ -191,6 +200,13 @@ ax3.minorticks_on()
 ax3.xaxis.set_major_formatter(formatter)
 ax3.xaxis.set_tick_params(rotation=10, labelsize=6)
 ax3.legend(loc='upper left', bbox_to_anchor=(1.05, 1))
+
+# plot 4
+ax4.plot_date(time_idx, store['occSch.occupied'],linestyle='solid', marker='.',label=alias_dict['occSch.occupied'])
+ax4.set_ylabel('Occupancy Status')
+ax4.grid(True)
+ax4.minorticks_on()
+ax4.legend(loc='upper left', bbox_to_anchor=(1.05, 1))
 
 plt.tight_layout(rect=[0,0,0.90,1])
 
