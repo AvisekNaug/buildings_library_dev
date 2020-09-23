@@ -7,21 +7,6 @@ model RLPPOV1
     cooCoi(show_T=true));
 
   Modelica.Blocks.Interfaces.RealInput TSupSetHea "Supply air temperature setpoint for heating";
-
-  Modelica.Blocks.Interfaces.RealOutput rl_oat "Outside Air Temperature - weaBus.TDryBul";
-  Modelica.Blocks.Interfaces.RealOutput rl_wbt "Outside Air Wet Bulb Temperature - weaBus.TWetBul";
-  Modelica.Blocks.Interfaces.RealOutput rl_sol "Solar Irradiation Global Horz - weaBus.HGloHor";
-  Modelica.Blocks.Interfaces.RealOutput rl_oah "Outside Air Humidity - weaBus.relHum";
-
-  Modelica.Blocks.Interfaces.RealOutput rl_sat "Supply Air Temperature at AHU - TSup.T";
-  Modelica.Blocks.Interfaces.RealOutput rl_ret "Return Air Temperature from Zones - TRet.T";
-  Modelica.Blocks.Interfaces.RealOutput rl_mix "Mixed Air Temperature - TMix.T";
-
-  Modelica.Blocks.Interfaces.RealOutput rl_TSupCor "Temperature of the passing fluid - TSupCor.T";
-  Modelica.Blocks.Interfaces.RealOutput rl_TSupEas "Temperature of the passing fluid - TSupEas.T";
-  Modelica.Blocks.Interfaces.RealOutput rl_TSupWes "Temperature of the passing fluid - TSupWes.T";
-  Modelica.Blocks.Interfaces.RealOutput rl_TSupSou "Temperature of the passing fluid - TSupSou.T";
-
   Controls.FanVFD conFanSup(xSet_nominal(displayUnit="Pa") = 410, r_N_min=
         yFanMin)
     "Controller for fan"
@@ -328,19 +313,6 @@ equation
           56},{1140,74},{140,74},{140,-5.2},{158,-5.2}}, color={0,0,127}));
   connect(wes.y_actual, pSetDuc.u[5]) annotation (Line(points={{1332,56},{1338,
           56},{1338,74},{140,74},{140,-4.4},{158,-4.4}}, color={0,0,127}));
-  connect(weaBus.TDryBul, rl_oat);
-  connect(weaBus.TWetBul, rl_wbt);
-  connect(weaBus.HGloHor, rl_sol);
-  connect(weaBus.relHum, rl_oah);
-
-  connect(TSup.T, rl_sat);
-  connect(TRet.T, rl_ret);
-  connect(TMix.T, rl_mix);
-
-  connect(TSupCor.T, rl_TSupCor);
-  connect(TSupEas.T, rl_TSupEas);
-  connect(TSupWes.T, rl_TSupWes);
-  connect(TSupSou.T, rl_TSupSou);
 
   annotation (
     Diagram(coordinateSystem(preserveAspectRatio=false,extent={{-380,-400},{1440,
