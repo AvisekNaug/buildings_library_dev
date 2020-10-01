@@ -1,5 +1,5 @@
 within Buildings.Examples.VAVReheat;
-model testbed_v1
+model testbed_v2
   "Variable air volume flow system with terminal reheat and five thermal zones. This allows external
    agents to set the supervisory control set points."
   extends Modelica.Icons.Example;
@@ -8,6 +8,7 @@ model testbed_v1
     cooCoi(show_T=true));
 
   Modelica.Blocks.Interfaces.RealInput TSupSetHea "AHU Heating coil Air Temperature Setpoint";
+  Modelica.Blocks.Interfaces.RealInput TSupSetCoo "AHU Cooling coil Air Temperature Setpoint";
 
   Modelica.Blocks.Interfaces.RealInput CorTRooSetCoo "Corridor Cooling Air Set Point. Default Value = 303.15";
   Modelica.Blocks.Interfaces.RealInput CorTRooSetHea "Corridor Heating Air Set Point. Default Value = 285.15";
@@ -37,8 +38,6 @@ model testbed_v1
     nin=5,
     controllerType=Modelica.Blocks.Types.SimpleController.PI,
     pMin=50) "Duct static pressure setpoint";
-
-  Controls.CoolingCoilTemperatureSetpoint TSetCoo "Setpoint for cooling coil";
 
   Controls.RoomVAV conVAVCor "Controller for terminal unit corridor";
   Controls.RoomVAV conVAVSou "Controller for terminal unit south";
@@ -88,10 +87,8 @@ equation
   connect(dpDisSupFan.p_rel, conFanSup.u_m);
 
   connect(pSetDuc.y, conFanSup.u);
-  connect(TSetCoo.TSet, cooCoiCon.u_s);
-  connect(TSetCoo.TSet, conEco.TSupCooSet);
-  connect(TSupSetHea, TSetCoo.TSetHea);
-  connect(modeSelector.cb, TSetCoo.controlBus);
+  connect(TSupSetCoo, cooCoiCon.u_s);
+  connect(TSupSetCoo, conEco.TSupCooSet);
   connect(conEco.VOut_flow, VOut1.V_flow);
   connect(conEco.yOA, eco.yOut);
 
@@ -152,4 +149,4 @@ equation
   connect(eas.y_actual, pSetDuc.u[3]);
   connect(nor.y_actual, pSetDuc.u[4]);
   connect(wes.y_actual, pSetDuc.u[5]);
-end testbed_v1;
+end testbed_v2;
