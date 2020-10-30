@@ -8,3 +8,4 @@ TODO: In later versions we will test and implement
 
 **Important Links**
 [Different Components and their Explanations](https://simulationresearch.lbl.gov/modelica/releases/latest/help/Buildings_Examples_VAVReheat.html#Buildings.Examples.VAVReheat)
+[Example Application](https://obc.lbl.gov/specification/example.html#internal-loads)
