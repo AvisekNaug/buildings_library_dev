@@ -12,4 +12,6 @@ TODO: In later versions we will test and implement
 
 [Example Application](https://obc.lbl.gov/specification/example.html#internal-loads)
 
+[Model of a floor of the building](https://simulationresearch.lbl.gov/modelica/releases/latest/help/Buildings_Examples_VAVReheat_ThermalZones.html#Buildings.Examples.VAVReheat.ThermalZones)
+
 [Thermal Model used](https://simulationresearch.lbl.gov/modelica/releases/latest/help/Buildings_ThermalZones_Detailed.html#Buildings.ThermalZones.Detailed.MixedAir)
