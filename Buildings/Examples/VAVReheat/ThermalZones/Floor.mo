@@ -262,9 +262,16 @@ model Floor "Model of a floor of the building"
   Modelica.Fluid.Vessels.BaseClasses.VesselFluidPorts_b portsCor[2](
       redeclare package Medium = Medium) "Fluid inlets and outlets"
     annotation (Placement(transformation(extent={{70,38},{110,54}})));
-  Modelica.Blocks.Math.MatrixGain gai(K=20*[0.4; 0.4; 0.2])
-    "Matrix gain to split up heat gain in radiant, convective and latent gain"
-    annotation (Placement(transformation(extent={{-100,100},{-80,120}})));
+  Modelica.Blocks.Math.MatrixGain gaiCor(K=20*[0.4; 0.4; 0.2])
+    "Matrix gain to split up core zone heat gain in radiant, convective and latent gain";
+  Modelica.Blocks.Math.MatrixGain gaiNor(K=20*[0.4; 0.4; 0.2])
+    "Matrix gain to split up north zone heat gain in radiant, convective and latent gain";
+  Modelica.Blocks.Math.MatrixGain gaiSou(K=20*[0.4; 0.4; 0.2])
+    "Matrix gain to split up south zone heat gain in radiant, convective and latent gain";
+  Modelica.Blocks.Math.MatrixGain gaiEas(K=20*[0.4; 0.4; 0.2])
+    "Matrix gain to split up east zone heat gain in radiant, convective and latent gain";
+  Modelica.Blocks.Math.MatrixGain gaiWes(K=20*[0.4; 0.4; 0.2])
+    "Matrix gain to split up west zone heat gain in radiant, convective and latent gain";
   Modelica.Blocks.Sources.Constant uSha(k=0)
     "Control signal for the shading device"
     annotation (Placement(transformation(extent={{-80,170},{-60,190}})));
@@ -338,6 +345,11 @@ model Floor "Model of a floor of the building"
     forceErrorControlOnFlow=false)
                          "Opening between perimeter3 and core"
     annotation (Placement(transformation(extent={{20,-20},{40,0}})));
+  Modelica.Blocks.Interfaces.RealInput CorintGaiFra "Fraction of internal heat gain Core Zone";
+  Modelica.Blocks.Interfaces.RealInput NorintGaiFra "Fraction of internal heat gain North Zone";
+  Modelica.Blocks.Interfaces.RealInput SouintGaiFra "Fraction of internal heat gain South Zone";
+  Modelica.Blocks.Interfaces.RealInput EasintGaiFra "Fraction of internal heat gain East Zone";
+  Modelica.Blocks.Interfaces.RealInput WesintGaiFra "Fraction of internal heat gain West Zone";
   Modelica.Blocks.Sources.CombiTimeTable intGaiFra(
     table=[0,0.05;
            8,0.05;
@@ -434,17 +446,17 @@ equation
       color={0,0,127},
       pattern=LinePattern.Dash,
       smooth=Smooth.None));
-  connect(gai.y, cor.qGai_flow)          annotation (Line(
+  connect(gaiCor.y, cor.qGai_flow)          annotation (Line(
       points={{-79,110},{120,110},{120,64},{142.4,64}},
       color={0,0,127},
       pattern=LinePattern.Dash,
       smooth=Smooth.None));
-  connect(gai.y, eas.qGai_flow)          annotation (Line(
+  connect(gaiEas.y, eas.qGai_flow)          annotation (Line(
       points={{-79,110},{226,110},{226,84},{302.4,84}},
       color={0,0,127},
       pattern=LinePattern.Dash,
       smooth=Smooth.None));
-  connect(gai.y, wes.qGai_flow)          annotation (Line(
+  connect(gaiWes.y, wes.qGai_flow)          annotation (Line(
       points={{-79,110},{-14,110},{-14,64},{10.4,64}},
       color={0,0,127},
       pattern=LinePattern.Dash,
@@ -688,11 +700,13 @@ equation
       color={0,127,255},
       smooth=Smooth.None,
       thickness=0.5));
-  connect(intGaiFra.y, gai.u) annotation (Line(
-      points={{-119,110},{-102,110}},
-      color={0,0,127},
-      smooth=Smooth.None,
-      pattern=LinePattern.Dash));
+
+  connect(CorintGaiFra.y, gaiCor.u);
+  connect(NorintGaiFra.y, gaiNor.u);
+  connect(SouintGaiFra.y, gaiSou.u);
+  connect(EasintGaiFra.y, gaiEas.u);
+  connect(WesintGaiFra.y, gaiWes.u);
+
   connect(cor.ports[11], senRelPre.port_a) annotation (Line(
       points={{149,49.6364},{110,49.6364},{110,250},{60,250}},
       color={0,127,255},
@@ -716,7 +730,7 @@ equation
       color={0,0,127},
       smooth=Smooth.None,
       pattern=LinePattern.Dash));
-  connect(gai.y, gaiIntNor.u) annotation (Line(
+  connect(gaiNor.y, gaiIntNor.u) annotation (Line(
       points={{-79,110},{-68,110},{-68,144},{-62,144}},
       color={0,0,127},
       pattern=LinePattern.Dash));
@@ -724,7 +738,7 @@ equation
       points={{-39,144},{142.4,144}},
       color={0,0,127},
       pattern=LinePattern.Dash));
-  connect(gai.y, gaiIntSou.u) annotation (Line(
+  connect(gaiSou.y, gaiIntSou.u) annotation (Line(
       points={{-79,110},{-68,110},{-68,-28},{-62,-28}},
       color={0,0,127},
       pattern=LinePattern.Dash));
