@@ -350,21 +350,12 @@ model Floor "Model of a floor of the building"
   Modelica.Blocks.Interfaces.RealInput SouintGaiFra "Fraction of internal heat gain South Zone";
   Modelica.Blocks.Interfaces.RealInput EasintGaiFra "Fraction of internal heat gain East Zone";
   Modelica.Blocks.Interfaces.RealInput WesintGaiFra "Fraction of internal heat gain West Zone";
-  Modelica.Blocks.Sources.CombiTimeTable intGaiFra(
-    table=[0,0.05;
-           8,0.05;
-           9,0.9;
-           12,0.9;
-           12,0.8;
-           13,0.8;
-           13,1;
-           17,1;
-           19,0.1;
-           24,0.05],
-    timeScale=3600,
-    extrapolation=Modelica.Blocks.Types.Extrapolation.Periodic)
-    "Fraction of internal heat gain"
-    annotation (Placement(transformation(extent={{-140,100},{-120,120}})));
+  Modelica.Blocks.Routing.Replicator Corscal2vec(nout=1);
+  Modelica.Blocks.Routing.Replicator Norscal2vec(nout=1);
+  Modelica.Blocks.Routing.Replicator Souscal2vec(nout=1);
+  Modelica.Blocks.Routing.Replicator Easscal2vec(nout=1);
+  Modelica.Blocks.Routing.Replicator Wesscal2vec(nout=1);
+  
   Buildings.Fluid.Sensors.RelativePressure senRelPre(redeclare package Medium = Medium)
     "Building pressure measurement"
     annotation (Placement(transformation(extent={{60,240},{40,260}})));
@@ -701,11 +692,20 @@ equation
       smooth=Smooth.None,
       thickness=0.5));
 
-  connect(CorintGaiFra.y, gaiCor.u);
-  connect(NorintGaiFra.y, gaiNor.u);
-  connect(SouintGaiFra.y, gaiSou.u);
-  connect(EasintGaiFra.y, gaiEas.u);
-  connect(WesintGaiFra.y, gaiWes.u);
+  connect(CorintGaiFra, Corscal2vec.u);
+  connect(Corscal2vec.y, gaiCor.u);
+
+  connect(NorintGaiFra, Norscal2vec.u);
+  connect(Norscal2vec.y, gaiNor.u);
+
+  connect(SouintGaiFra, Souscal2vec.u);
+  connect(Souscal2vec.y, gaiSou.u);
+
+  connect(EasintGaiFra, Easscal2vec.u);
+  connect(Easscal2vec.y, gaiEas.u);
+
+  connect(WesintGaiFra, Wesscal2vec.u);
+  connect(Wesscal2vec.y, gaiWes.u);
 
   connect(cor.ports[11], senRelPre.port_a) annotation (Line(
       points={{149,49.6364},{110,49.6364},{110,250},{60,250}},

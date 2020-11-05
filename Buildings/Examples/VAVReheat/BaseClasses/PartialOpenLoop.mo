@@ -23,6 +23,12 @@ partial model PartialOpenLoop
   parameter Modelica.SIunits.Area AFloEas=flo.eas.AFlo "Floor area east";
   parameter Modelica.SIunits.Area AFloWes=flo.wes.AFlo "Floor area west";
 
+  Modelica.Blocks.Interfaces.RealInput pCorintGaiFra "Fraction of internal heat gain Core Zone: p";
+  Modelica.Blocks.Interfaces.RealInput pNorintGaiFra "Fraction of internal heat gain North Zone: p";
+  Modelica.Blocks.Interfaces.RealInput pSouintGaiFra "Fraction of internal heat gain South Zone: p";
+  Modelica.Blocks.Interfaces.RealInput pEasintGaiFra "Fraction of internal heat gain East Zone: p";
+  Modelica.Blocks.Interfaces.RealInput pWesintGaiFra "Fraction of internal heat gain West Zone: p";
+
   parameter Modelica.SIunits.Area AFlo[numZon]={flo.cor.AFlo,flo.sou.AFlo,flo.eas.AFlo,
       flo.nor.AFlo,flo.wes.AFlo} "Floor area of each zone";
   final parameter Modelica.SIunits.Area ATot=sum(AFlo) "Total floor area";
@@ -826,6 +832,11 @@ equation
       points={{98,-52},{80,-52},{80,-112}},
       color={28,108,200},
       thickness=0.5));
+  connect(pCorintGaiFra,flo.CorintGaiFra);
+  connect(pNorintGaiFra,flo.NorintGaiFra);
+  connect(pSouintGaiFra,flo.SouintGaiFra);
+  connect(pEasintGaiFra,flo.EasintGaiFra);
+  connect(pWesintGaiFra,flo.WesintGaiFra);
   annotation (Diagram(coordinateSystem(preserveAspectRatio=false, extent={{-380,
             -400},{1420,600}})), Documentation(info="<html>
 <p>
