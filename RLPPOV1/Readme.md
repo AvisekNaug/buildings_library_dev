@@ -18,7 +18,7 @@ import pymodelica
 # Increase memory in case compilation fails
 pymodelica.environ['JVM_ARGS'] = '-Xmx4096m'
 
-model_name = 'Buildings.Examples.VAVReheat.RLPPOV1'
+model_name = 'Buildings.Examples.VAVReheat.testbed_v0'
 fmu_path = compile_fmu(model_name, target='cs')
 
 
